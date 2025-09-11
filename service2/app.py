@@ -1,4 +1,19 @@
 import os
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+@app.route("/status", methods=["GET"])
+def status():
+    return jsonify({"service": "service2", "status": "ok"})
+
+@app.route("/receive", methods=["POST"])
+def receive():
+    return jsonify({
+        "service2_uptime": get_uptime(),
+        "service2_free_disk": get_free_disk()
+    })
+
 
 def get_uptime():
     with open("/proc/uptime", "r") as f:
@@ -13,6 +28,4 @@ def get_free_disk():
     return f"{free_mb} MB"
 
 if __name__ == "__main__":
-    print("=== Container Info (Python) ===")
-    print("Uptime:", get_uptime())
-    print("Free disk in /:", get_free_disk())
+    app.run(host="0.0.0.0", port=5000)

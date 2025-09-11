@@ -11,7 +11,7 @@ RUN npm install
 
 USER node
 
-COPY index.js .
+COPY . .
 
 EXPOSE 8199
 
