@@ -6,9 +6,12 @@ services:
     image: service1:latest
     ports: 
       - "8199:8199"
+    volumes:
+      - vStorage:/data
     networks:
       - internal
       - public
+    user: root
   service2:
     build:
       context: ./service2
@@ -16,9 +19,15 @@ services:
     image: service2:latest
     ports:
       - "5000:5000"
+    volumes:
+      - vStorage:/data
     networks:
       - internal
-  
+
+volumes:
+  vStorage:
+    driver: local
+
 networks:
   public:
     driver: bridge
