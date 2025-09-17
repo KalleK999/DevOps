@@ -1,0 +1,13 @@
+C:\Users\kalle\Desktop\koulu\DevOps\DevOps>docker container ls
+CONTAINER ID   IMAGE             COMMAND                  CREATED          STATUS          PORTS                                         NAMES
+7f00d8b617de   storage:latest    "./server"               45 minutes ago   Up 37 seconds   6000/tcp                                      devops-storage-1
+6da776fdc0a5   service2:latest   "python app.py"          45 minutes ago   Up 37 seconds   5000/tcp                                      devops-service2-1
+e21a3d2174b1   service1:latest   "docker-entrypoint.s…"   45 minutes ago   Up 37 seconds   0.0.0.0:8199->8199/tcp, [::]:8199->8199/tcp   devops-service1-1
+
+C:\Users\kalle\Desktop\koulu\DevOps\DevOps>docker network ls
+NETWORK ID     NAME              DRIVER    SCOPE
+c3f30502a9ca   bridge            bridge    local
+9ed6207de9c0   devops_internal   bridge    local
+22a76a40333c   devops_public     bridge    local
+70c2e67d4222   host              host      local
+9a62a3f536e9   none              null      local
