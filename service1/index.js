@@ -23,16 +23,34 @@ if (!fs.existsSync(data_dir)) {
 }
 
 app.get("/status", async (req, res) => {
-  const msg = `Timestamp1: uptime  ${getUptime()}, free disk in root: ${getFreeDisk()}\n`
+  const time = new Date();
+  const msg = `${time.toISOString()}: uptime  ${getUptime()}, free disk in root: ${getFreeDisk()}\n`
   const fileName = path.join(data_dir, "status_log.txt");
   fs.appendFileSync(fileName, msg);
   try {
-    const response = await axios.post("http://service2:5000/receive", 
+    await axios.post("http://storage:6000/status", 
+      msg, { headers: { "Content-Type": "text/plain" } }
+    );
+  } catch (err) {
+    res.status(500).send("Failed to store service1 status in storage: " + err.message);
+  }
+  try {
+    const response = await axios.post("http://service2:5000/status", 
       msg, { headers: { "Content-Type": "text/plain" } }
     );
     res.send(`service1 sent text: "${msg}"service2 replied: ${response.data}`);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).send("Failed to fetch status from service2: " + err.message);
+  }
+});
+
+app.get("/log", async (req, res) => {
+  try {
+    const log_response = await axios.get("http://storage:6000/log");
+    res.set("Content-Type", "text/plain");
+    res.send(log_response.data);
+  } catch (err) {
+    res.status(500).send("Failed to fetch logs from storage: " + err.message);
   }
 });
 

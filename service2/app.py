@@ -1,4 +1,6 @@
 import os
+import requests
+import datetime
 from flask import Flask, Response
 
 app = Flask(__name__)
@@ -6,12 +8,13 @@ app = Flask(__name__)
 data_dir = "/data"
 os.makedirs(data_dir, exist_ok=True)
 
-@app.route("/receive", methods=["POST"])
-def receive():
-    msg = f"Timestamp2: uptime {get_uptime()}, free disk in root: {get_free_disk()}\n"
+@app.route("/status", methods=["POST"])
+def status():
+    msg = f"{datetime.datetime.now().isoformat()}: uptime {get_uptime()}, free disk in root: {get_free_disk()}\n"
     fileName = os.path.join(data_dir, "status_log.txt")
     with open(fileName, "a") as f:
         f.write(msg)
+    requests.post("http://storage:6000/status", msg, headers={"Content-Type": "text/plain"})
     return Response(msg, mimetype="text/plain")
 
 

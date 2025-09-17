@@ -11,21 +11,34 @@ services:
     networks:
       - internal
       - public
-    user: root
+    user: root # I understand that this is not the smartest solution, but this was the only way I could give Node access to vStorage
   service2:
     build:
       context: ./service2
       dockerfile: Dockerfile
     image: service2:latest
-    ports:
-      - "5000:5000"
+    expose:
+      - "5000"
     volumes:
       - vStorage:/data
+    networks:
+      - internal
+  storage:
+    build:
+      context: ./storage
+      dockerfile: Dockerfile
+    image: storage:latest
+    expose:
+      - "6000"
+    volumes:
+      - Storage:/data
     networks:
       - internal
 
 volumes:
   vStorage:
+    driver: local
+  Storage:
     driver: local
 
 networks:
